@@ -18,7 +18,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    api_url = entry.data[CONF_API_URL]
+    api_url = entry.data.get(CONF_API_URL, DEFAULT_API_URL)
     # Backwards compatibility: older installs may have stored the API key as
     # 'api_key' or 'apikey'. Prefer the configured `CONF_API_KEY` (now 'key').
     api_key = entry.data.get(CONF_API_KEY) or entry.data.get("api_key") or entry.data.get("apikey")

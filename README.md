@@ -61,7 +61,6 @@ Konfiguration per `configuration.yaml` oder später per UI-Flow:
 
 ```yaml
 kraichtal_wetter_api:
-  api_url: !secret weather_api_url
   key: !secret weather_api_key
   scan_interval: 300
 ```
@@ -72,7 +71,6 @@ kraichtal_wetter_api:
 
 ```yaml
 weather_api_key: DEIN_API_KEY_HIER
-weather_api_url: https://api.example.com/weather
 ```
 
 ## 3. Sensoren und Weather-Plattform

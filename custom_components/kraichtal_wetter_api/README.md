@@ -6,15 +6,14 @@ Diese Custom Integration verbindet Home Assistant mit der Kraichtal Wetter API. 
 
 1. Kopiere den Ordner `custom_components/kraichtal_wetter_api` in dein Home Assistant `custom_components`-Verzeichnis.
 2. Starte Home Assistant neu.
-3. Öffne `Einstellungen → Geräte & Dienste → Integration hinzufügen`.
-4. Suche nach `Kraichtal Wetter API`.
-5. Gib die `API-URL` ein und optional den `API-Key`.
+4. Öffne `Einstellungen → Geräte & Dienste → Integration hinzufügen`.
+5. Suche nach `Kraichtal Wetter API`.
+6. Gib den `API-Key` ein (die API-URL ist fest in der Integration hinterlegt).
 
 ## Konfiguration
 
 ```yaml
 kraichtal_wetter_api:
-  api_url: !secret weather_api_url
   key: !secret weather_api_key
   scan_interval: 300
 ```
@@ -23,7 +22,6 @@ kraichtal_wetter_api:
 
 ```yaml
 weather_api_key: DEIN_API_KEY_HIER
-weather_api_url: https://api.example.com/weather
 ```
 
 ## Unterstützte Entitäten

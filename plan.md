@@ -28,7 +28,6 @@ weather_api_url: https://api.example.com/weather
 
 ```yaml
 wetterstation_api:
-  api_url: !secret weather_api_url
   key: !secret weather_api_key
   scan_interval: 300
 ```
