@@ -19,9 +19,9 @@ class KraichtalWetterApiClient:
 
     async def async_get_data(self) -> dict[str, Any]:
         url = self._api_url
-        if self._api_key and "api_key=" not in url and "apikey=" not in url:
+        if self._api_key and "key=" not in url and "api_key=" not in url and "apikey=" not in url:
             separator = "&" if "?" in url else "?"
-            url = f"{url}{separator}api_key={self._api_key}"
+            url = f"{url}{separator}key={self._api_key}"
 
         response = await self._session.get(url, timeout=10)
         response.raise_for_status()
