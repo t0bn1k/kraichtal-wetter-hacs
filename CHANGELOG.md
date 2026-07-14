@@ -29,3 +29,12 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 ## Unveröffentlicht
 - Weitere Stabilitäts- und Fehlertests.
 - Optionales `CHANGELOG`-Anpassungsformat.
+
+## [0.1.0] - 2026-07-14
+### Geändert
+- Minor Release: Feste API-URL in der Integration hinterlegt; Nutzer geben nur noch den `key` ein.
+- Beibehaltung der Abwärtskompatibilität für bestehende `api_key`/`apikey`-Einträge.
+- Korrekte Anhängung des `key=` Parameters an die API-URL (vermeidet 401 Unauthorized).
+- Icon: `logo.png` (128×128) hinzugefügt und in Integration bereitgestellt.
+- Dokumentation (`README.md`, `plan.md`) aktualisiert.
+
