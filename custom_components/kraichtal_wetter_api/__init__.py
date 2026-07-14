@@ -1,3 +1,4 @@
+import importlib
 import logging
 from datetime import timedelta
 
@@ -15,6 +16,11 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     return True
+
+
+def _import_platforms() -> None:
+    for platform in PLATFORMS:
+        importlib.import_module(f"custom_components.kraichtal_wetter_api.{platform}")
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -45,6 +51,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "client": client,
     }
 
+    await hass.async_add_executor_job(_import_platforms)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True

@@ -1,11 +1,7 @@
 from __future__ import annotations
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import (
-    PERCENTAGE,
-    SPEED_KILOMETERS_PER_HOUR,
-    TEMP_CELSIUS,
-)
+from homeassistant.const import PERCENTAGE, TEMP_CELSIUS
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -40,13 +36,13 @@ SENSOR_TYPES = [
     EntityDescription(
         key="wind",
         name="Windgeschwindigkeit",
-        native_unit_of_measurement=SPEED_KILOMETERS_PER_HOUR,
+        native_unit_of_measurement="km/h",
         icon="mdi:weather-windy",
     ),
     EntityDescription(
         key="gust_max",
         name="Böen max",
-        native_unit_of_measurement=SPEED_KILOMETERS_PER_HOUR,
+        native_unit_of_measurement="km/h",
         icon="mdi:weather-windy",
     ),
     EntityDescription(
