@@ -1,11 +1,12 @@
 {
   "domain": "kraichtal_wetter_api",
   "name": "Kraichtal Wetter API",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "documentation": "https://github.com/t0bn1k/kraichtal-wetter-hacs",
   "requirements": [],
   "dependencies": [],
-  "codeowners": ["@dt0bn1k"],
+  "codeowners": ["@t0bn1k"],
   "config_flow": true,
-  "iot_class": "local_polling"
+  "iot_class": "local_polling",
+  "import_executor": true
 }
