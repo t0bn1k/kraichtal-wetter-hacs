@@ -1,0 +1,11 @@
+{
+  "domain": "kraichtal_wetter_api",
+  "name": "Kraichtal Wetter API",
+  "version": "1.0.0",
+  "documentation": "https://github.com/<dein-user>/kraichtal-wetter-hacs",
+  "requirements": [],
+  "dependencies": [],
+  "codeowners": ["@dein-github-user"],
+  "config_flow": true,
+  "iot_class": "local_polling"
+}
