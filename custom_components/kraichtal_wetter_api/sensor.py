@@ -3,7 +3,6 @@ from __future__ import annotations
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import (
     PERCENTAGE,
-    PRESSURE_HPA,
     SPEED_KILOMETERS_PER_HOUR,
     TEMP_CELSIUS,
 )
@@ -35,7 +34,7 @@ SENSOR_TYPES = [
     EntityDescription(
         key="pressure",
         name="Luftdruck",
-        native_unit_of_measurement=PRESSURE_HPA,
+        native_unit_of_measurement="hPa",
         icon="mdi:gauge",
     ),
     EntityDescription(

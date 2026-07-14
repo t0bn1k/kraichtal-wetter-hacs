@@ -35,6 +35,7 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 ## Unveröffentlicht
 - Weitere Stabilitäts- und Fehlertests.
 - Optionales `CHANGELOG`-Anpassungsformat.
+- Fix: remove deprecated `PRESSURE_HPA` import and use "hPa" units for pressure sensor.
 
 ## [0.1.0] - 2026-07-14
 ### Geändert
