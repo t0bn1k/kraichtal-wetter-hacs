@@ -1,53 +1,23 @@
 # Changelog
 
-Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festgehalten.
-
-## [0.0.1] - 2026-07-14
-### Hinzugefügt
-- Erste Version der `Kraichtal Wetter API` Home Assistant Custom Integration.
-- Unterstützung einer `config_flow`-basierten Einrichtung.
-- Sensor-Plattform mit folgenden Entitäten:
-  - `sensor.kraichtal_wetter_temp`
-  - `sensor.kraichtal_wetter_feels_like`
-  - `sensor.kraichtal_wetter_humidity`
-  - `sensor.kraichtal_wetter_pressure`
-  - `sensor.kraichtal_wetter_wind`
-  - `sensor.kraichtal_wetter_gust_max`
-  - `sensor.kraichtal_wetter_rain`
-  - `sensor.kraichtal_wetter_solar`
-- Weather-Plattform mit `weather.kraichtal_wetter_forecast`.
-- Dokumentation für HACS und Dashboard-Visualisierung.
-- Release-Strategie und Testplan hinzugefügt.
-
-## [0.0.2] - 2026-07-14
-### Geändert
-- Anpassung der Konfigurationsoption von `api_key` zu `key` (abwärtskompatibel)
-- Fehlerbehebung: korrekte Anhängung des API-Parameters `key=` an die API-URL (vermeidet 401 Unauthorized)
-- Integration-Icon als `logo.png` hinzugefügt (128×128) für HACS-/Integration-Anzeige
-- Dokumentation und Beispiele in `README.md` und `plan.md` aktualisiert
+Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
 ## [0.2.0] - 2026-07-14
 ### Geändert
-- Erweiterung: Alle `kraichtal_wetter_api`-Entitäten werden jetzt als ein Gerät auf der Integrationen-Seite gruppiert.
-- Erweiterung: Zusätzliche API-Felder aus `current` wie `dewpoint`, `wind_dir`, `tmax_today`, `tmin_today`, `rain_today`, `warnings`, `obs_date`, `obs_time`, `realtime` und `station_today.*` werden jetzt als Sensoren bereitgestellt.
+- Integration umbenannt und als `Kraichtal Wetter` angezeigt.
+- Alle `kraichtal_wetter`-Entitäten werden nun als ein Gerät in der Integrationen-Übersicht gruppiert.
+- Erweiterung der Sensorabdeckung um zusätzliche API-Felder wie `dewpoint`, `wind_dir`, `tmax_today`, `tmin_today`, `rain_today`, `warnings`, `obs_date`, `obs_time`, `realtime` und `station_today.*`.
 - Fix: Nested current-Felder über `station_today.*` korrekt aufgelöst.
 
-## [0.1.10] - 2026-07-14
+## [0.0.2] - 2026-07-14
 ### Geändert
-- Fix: `DEFAULT_API_URL` importiert, damit die fest hinterlegte Kraichtal-API-URL als Fallback funktioniert.
-- Fix: Beispiel-URL in `plan.md` auf `https://kraichtal-wetter.de/dashboard/api.php` aktualisiert.
-- Fix: `async_forward_entry_setups` statt nicht existierender `async_forward_entry_setup` verwendet.
-- Fix: remove deprecated `PRESSURE_HPA` import and use "hPa" units for pressure sensor.
+- Konfigurationsfeld von `api_key` zu `key` umgestellt (abwärtskompatibel).
+- Korrekte Anhängung des API-Parameters `key=` an die URL.
+- Integration-Icon als `logo.png` hinzugefügt.
 
-## Unveröffentlicht
-- Weitere Stabilitäts- und Fehlertests.
-- Optionales `CHANGELOG`-Anpassungsformat.
-
-## [0.1.0] - 2026-07-14
-### Geändert
-- Minor Release: Feste API-URL in der Integration hinterlegt; Nutzer geben nur noch den `key` ein.
-- Beibehaltung der Abwärtskompatibilität für bestehende `api_key`/`apikey`-Einträge.
-- Korrekte Anhängung des `key=` Parameters an die API-URL (vermeidet 401 Unauthorized).
-- Icon: `logo.png` (128×128) hinzugefügt und in Integration bereitgestellt.
-- Dokumentation (`README.md`, `plan.md`) aktualisiert.
+## [0.0.1] - 2026-07-14
+### Hinzugefügt
+- Erste Version der Home Assistant Custom Integration für die Kraichtal Wetter API.
+- Unterstützung einer `config_flow`-basierten Einrichtung.
+- Erste Sensor-Entitäten und `weather.kraichtal_wetter_forecast`.
 

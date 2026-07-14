@@ -183,8 +183,8 @@ class KraichtalWetterSensor(CoordinatorEntity, SensorEntity):
         self._attr_name = f"Kraichtal Wetter {description.name}"
         self._attr_unique_id = f"kraichtal_wetter_{description.key}"
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, getattr(coordinator, "entry_id", "kraichtal_wetter_api"))},
-            name="Kraichtal Wetter API",
+            identifiers={(DOMAIN, getattr(coordinator, "entry_id", "kraichtal_wetter"))},
+            name="Kraichtal Wetter",
             manufacturer="Kraichtal Wetter",
             model="Kraichtal Wetter Station",
             configuration_url=getattr(coordinator, "api_url", ""),

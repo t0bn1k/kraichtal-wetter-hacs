@@ -1,9 +1,9 @@
 {
-  "title": "Kraichtal Wetter API",
+  "title": "Kraichtal Wetter",
   "config": {
     "step": {
       "user": {
-        "title": "Kraichtal Wetter API Konfiguration",
+        "title": "Kraichtal Wetter Konfiguration",
         "data": {
           "key": "API-Key (optional)",
           "scan_interval": "Abfrageintervall in Sekunden"

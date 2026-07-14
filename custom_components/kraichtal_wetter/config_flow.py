@@ -5,7 +5,7 @@ from homeassistant.data_entry_flow import FlowResult
 from .const import CONF_API_URL, CONF_API_KEY, DEFAULT_SCAN_INTERVAL, DEFAULT_API_URL, DOMAIN
 
 
-class KraichtalWetterApiConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class KraichtalWetterConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
@@ -16,9 +16,9 @@ class KraichtalWetterApiConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data = dict(user_input)
             if "api_key" in data and CONF_API_KEY not in data:
                 data[CONF_API_KEY] = data.pop("api_key")
-            # Set the baked-in API URL so users only provide the key.
+            # Set the baked-in URL so users only provide the key.
             data[CONF_API_URL] = DEFAULT_API_URL
-            return self.async_create_entry(title="Kraichtal Wetter API", data=data)
+            return self.async_create_entry(title="Kraichtal Wetter", data=data)
 
         return self.async_show_form(
             step_id="user",
@@ -31,7 +31,7 @@ class KraichtalWetterApiConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return vol.Schema(
             {
-                # API URL is fixed by the integration; user only provides the key.
+                # URL is fixed by the integration; user only provides the key.
                 vol.Optional(CONF_API_KEY): cv.string,
                 vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): cv.positive_int,
             }

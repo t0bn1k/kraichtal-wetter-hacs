@@ -1,6 +1,6 @@
 {
-  "domain": "kraichtal_wetter_api",
-  "name": "Kraichtal Wetter API",
+  "domain": "kraichtal_wetter",
+  "name": "Kraichtal Wetter",
   "version": "0.2.0",
   "documentation": "https://github.com/t0bn1k/kraichtal-wetter-hacs",
   "requirements": [],

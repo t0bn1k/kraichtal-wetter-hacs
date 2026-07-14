@@ -1,0 +1,58 @@
+title: Kraichtal Wetter Übersicht
+views:
+  - title: Kraichtal Wetter
+    path: kraichtal-wetter
+    badges:
+      - entity: weather.kraichtal_wetter_forecast
+      - entity: sensor.kraichtal_wetter_temp
+      - entity: sensor.kraichtal_wetter_humidity
+    cards:
+      - type: weather-forecast
+        entity: weather.kraichtal_wetter_forecast
+        name: Kraichtal Wetter
+
+      - type: entities
+        title: Aktuelle Werte
+        show_header_toggle: false
+        entities:
+          - entity: sensor.kraichtal_wetter_temp
+          - entity: sensor.kraichtal_wetter_feels_like
+          - entity: sensor.kraichtal_wetter_dewpoint
+          - entity: sensor.kraichtal_wetter_humidity
+          - entity: sensor.kraichtal_wetter_pressure
+          - entity: sensor.kraichtal_wetter_wind
+          - entity: sensor.kraichtal_wetter_wind_dir
+          - entity: sensor.kraichtal_wetter_gust_max
+          - entity: sensor.kraichtal_wetter_solar
+          - entity: sensor.kraichtal_wetter_rain
+
+      - type: entities
+        title: Tageswerte
+        show_header_toggle: false
+        entities:
+          - entity: sensor.kraichtal_wetter_tmax_today
+          - entity: sensor.kraichtal_wetter_tmin_today
+          - entity: sensor.kraichtal_wetter_rain_today
+          - entity: sensor.kraichtal_wetter_warnings
+          - entity: sensor.kraichtal_wetter_obs_date
+          - entity: sensor.kraichtal_wetter_obs_time
+          - entity: sensor.kraichtal_wetter_realtime
+
+      - type: entities
+        title: Station heute
+        show_header_toggle: false
+        entities:
+          - entity: sensor.kraichtal_wetter_station_today_tmax
+          - entity: sensor.kraichtal_wetter_station_today_tmin
+          - entity: sensor.kraichtal_wetter_station_today_gust
+          - entity: sensor.kraichtal_wetter_station_today_press_max
+          - entity: sensor.kraichtal_wetter_station_today_press_min
+
+      - type: history-graph
+        title: Verlauf der wichtigsten Werte
+        entities:
+          - sensor.kraichtal_wetter_temp
+          - sensor.kraichtal_wetter_humidity
+          - sensor.kraichtal_wetter_pressure
+        hours_to_show: 24
+        refresh_interval: 300

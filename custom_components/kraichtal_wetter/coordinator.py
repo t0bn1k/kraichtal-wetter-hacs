@@ -11,7 +11,7 @@ from .const import CONF_API_KEY, CONF_API_URL
 _LOGGER = logging.getLogger(__name__)
 
 
-class KraichtalWetterApiClient:
+class KraichtalWetterClient:
     def __init__(self, api_url: str, api_key: str | None, session) -> None:
         self._api_url = api_url
         self._api_key = api_key
@@ -37,8 +37,8 @@ class KraichtalWetterApiClient:
             data = await self.async_get_data()
             return data
         except ClientResponseError as err:
-            _LOGGER.error("Kraichtal Wetter API HTTP error: %s", err)
+            _LOGGER.error("Kraichtal Wetter HTTP error: %s", err)
             raise UpdateFailed(err)
         except Exception as err:  # noqa: BLE001
-            _LOGGER.error("Kraichtal Wetter API update failed: %s", err)
+            _LOGGER.error("Kraichtal Wetter update failed: %s", err)
             raise UpdateFailed(err)

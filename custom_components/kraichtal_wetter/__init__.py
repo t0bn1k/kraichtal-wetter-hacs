@@ -9,7 +9,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import CONF_API_KEY, CONF_API_URL, DEFAULT_API_URL, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS
-from .coordinator import KraichtalWetterApiClient
+from .coordinator import KraichtalWetterClient
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 def _import_platforms() -> None:
     for platform in PLATFORMS:
-        importlib.import_module(f"custom_components.kraichtal_wetter_api.{platform}")
+        importlib.import_module(f"custom_components.kraichtal_wetter.{platform}")
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -31,12 +31,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     scan_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
 
     session = async_get_clientsession(hass)
-    client = KraichtalWetterApiClient(api_url, api_key, session)
+    client = KraichtalWetterClient(api_url, api_key, session)
 
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name="Kraichtal Wetter API",
+        name="Kraichtal Wetter",
         update_method=client.async_update,
         update_interval=timedelta(seconds=scan_interval),
     )

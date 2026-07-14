@@ -28,8 +28,8 @@ class KraichtalWetterWeather(CoordinatorEntity, WeatherEntity):
         self._attr_name = "Kraichtal Wetter Forecast"
         self._attr_unique_id = "kraichtal_wetter_forecast"
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, getattr(coordinator, "entry_id", "kraichtal_wetter_api"))},
-            name="Kraichtal Wetter API",
+            identifiers={(DOMAIN, getattr(coordinator, "entry_id", "kraichtal_wetter"))},
+            name="Kraichtal Wetter",
             manufacturer="Kraichtal Wetter",
             model="Kraichtal Wetter Station",
             configuration_url=getattr(coordinator, "api_url", ""),

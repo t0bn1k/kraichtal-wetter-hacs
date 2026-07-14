@@ -1,20 +1,18 @@
 # Kraichtal Wetter
 
-Kraichtal Wetter ist eine Home Assistant Custom Integration, die aktuelle Wetterdaten aus der Kraichtal Wetter API als Sensoren und als `weather`-Entität bereitstellt.
+Kraichtal Wetter verbindet Home Assistant mit der Kraichtal Wetter API und stellt die Daten als Sensoren sowie als `weather`-Entity bereit.
 
 ## Installation
-
-### Manuelle Installation
 
 1. Kopiere den Ordner `custom_components/kraichtal_wetter` in dein Home Assistant `custom_components`-Verzeichnis.
 2. Starte Home Assistant neu.
 3. Öffne `Einstellungen → Geräte & Dienste → Integration hinzufügen`.
 4. Suche nach `Kraichtal Wetter`.
-5. Folge dem UI-Setup und gib deinen API-Key ein.
+5. Gib den API-Key ein. Die API-URL ist in der Integration fest hinterlegt.
 
-### Optional: Konfiguration in YAML
+## Konfiguration
 
-Die Integration ist primär für die UI-Konfiguration ausgelegt. Optional kannst du folgende Einstellungen in `configuration.yaml` hinterlegen:
+Diese Integration verwendet eine UI-basierte Einrichtung. Optional kannst du die Werte auch in `configuration.yaml` eintragen:
 
 ```yaml
 kraichtal_wetter:
@@ -27,13 +25,6 @@ In `secrets.yaml`:
 ```yaml
 weather_api_key: DEIN_API_KEY_HIER
 ```
-
-## Was bietet Kraichtal Wetter?
-
-- Aktuelle Wetterdaten aus der Kraichtal Wetter API
-- Forecast über `weather.kraichtal_wetter_forecast`
-- Erweiterte Sensoren aus `station_today`
-- Gruppierte Entitäten unter einem Gerät in der Integrationen-Ansicht
 
 ## Unterstützte Entitäten
 
@@ -63,8 +54,6 @@ weather_api_key: DEIN_API_KEY_HIER
 
 ## Lovelace Beispiele
 
-### Übersicht
-
 ```yaml
 type: vertical-stack
 cards:
@@ -92,26 +81,7 @@ cards:
       - sensor.kraichtal_wetter_warnings
       - sensor.kraichtal_wetter_realtime
 ```
-```
 
-### Verlauf
+## Hinweis
 
-```yaml
-type: history-graph
-title: Verlauf Temperatur & Luftfeuchte
-entities:
-  - sensor.kraichtal_wetter_temp
-  - sensor.kraichtal_wetter_humidity
-hours_to_show: 24
-refresh_interval: 300
-```
-
-## Hinweise
-
-- Die Integration erscheint in Home Assistant als `Kraichtal Wetter`.
-- Nutzer geben nur einen API-Key ein; die API-URL ist fest in der Integration hinterlegt.
-- Alle Entitäten werden als Teil desselben Geräts in der Integrationen-Ansicht angezeigt.
-
-## Repository
-
-Dieses Repository enthält die Custom Integration unter `custom_components/kraichtal_wetter_api` sowie die Dokumentation und das Changelog für die Integration.
+Die Integration erscheint in Home Assistant als `Kraichtal Wetter`. Alle Entitäten werden unter einem Gerät in der Integrationen-Übersicht gruppiert.
