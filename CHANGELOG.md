@@ -2,6 +2,10 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.2.3] - 2026-07-14
+### Geändert
+- Icon hinzugefügt
+
 ## [0.2.2] - 2026-07-14
 ### Geändert
 - Rebranding finalisiert
