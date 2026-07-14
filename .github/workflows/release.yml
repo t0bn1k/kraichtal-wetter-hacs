@@ -1,0 +1,31 @@
+name: Create Release from Tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract changelog for tag
+        id: changelog
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          # Extract the changelog section for the tag; fallback to full CHANGELOG.md
+          awk '/^## \['"$TAG"'\]/{p=1; next} /^## \[/{p=0} p{print}' CHANGELOG.md > release_notes.md || true
+          if [ ! -s release_notes.md ]; then cat CHANGELOG.md > release_notes.md; fi
+          echo "Generated release_notes.md"
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: release_notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
