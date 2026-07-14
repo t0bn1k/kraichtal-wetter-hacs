@@ -19,6 +19,13 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 - Dokumentation für HACS und Dashboard-Visualisierung.
 - Release-Strategie und Testplan hinzugefügt.
 
+## [0.0.2] - 2026-07-14
+### Geändert
+- Anpassung der Konfigurationsoption von `api_key` zu `key` (abwärtskompatibel)
+- Fehlerbehebung: korrekte Anhängung des API-Parameters `key=` an die API-URL (vermeidet 401 Unauthorized)
+- Integration-Icon als `logo.png` hinzugefügt (128×128) für HACS-/Integration-Anzeige
+- Dokumentation und Beispiele in `README.md` und `plan.md` aktualisiert
+
 ## Unveröffentlicht
 - Weitere Stabilitäts- und Fehlertests.
 - Optionales `CHANGELOG`-Anpassungsformat.
