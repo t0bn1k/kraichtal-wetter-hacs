@@ -198,6 +198,10 @@ git push --tags
 - Teste mit verschiedenen API-Antworten: volle Daten, unvollständige Daten, Fehler.
 - Dokumentiere Feld-Belegungen und unterstützte Einheiten in `README.md`.
 
+## Release-Strategie
+
+Siehe `RELEASE_STRATEGY.md` für den empfohlenen Prozess zu Git-Tags, HACS-Releases und Versionsnummerierung.
+
 ## Verweis auf den Plan
 
 Die ursprüngliche `plan.md` wurde aus dem Repository entfernt, damit das Repo sauber für einen ersten Test bleibt. Falls du sie benötigst, liegt sie nun auf dem Desktop als `plan.md`.
