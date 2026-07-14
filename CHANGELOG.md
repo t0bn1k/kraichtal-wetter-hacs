@@ -26,12 +26,13 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 - Integration-Icon als `logo.png` hinzugefügt (128×128) für HACS-/Integration-Anzeige
 - Dokumentation und Beispiele in `README.md` und `plan.md` aktualisiert
 
-## [0.1.10] - 2026-07-14
+## [0.2.0] - 2026-07-14
 ### Geändert
+- Erweiterung: Alle `kraichtal_wetter_api`-Entitäten werden jetzt als ein Gerät auf der Integrationen-Seite gruppiert.
 - Erweiterung: Zusätzliche API-Felder aus `current` wie `dewpoint`, `wind_dir`, `tmax_today`, `tmin_today`, `rain_today`, `warnings`, `obs_date`, `obs_time`, `realtime` und `station_today.*` werden jetzt als Sensoren bereitgestellt.
 - Fix: Nested current-Felder über `station_today.*` korrekt aufgelöst.
 
-## [0.1.9] - 2026-07-14
+## [0.1.10] - 2026-07-14
 ### Geändert
 - Fix: `DEFAULT_API_URL` importiert, damit die fest hinterlegte Kraichtal-API-URL als Fallback funktioniert.
 - Fix: Beispiel-URL in `plan.md` auf `https://kraichtal-wetter.de/dashboard/api.php` aktualisiert.

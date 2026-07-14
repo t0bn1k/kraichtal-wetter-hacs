@@ -40,6 +40,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_method=client.async_update,
         update_interval=timedelta(seconds=scan_interval),
     )
+    coordinator.entry_id = entry.entry_id
+    coordinator.api_url = api_url
 
     try:
         await coordinator.async_config_entry_first_refresh()

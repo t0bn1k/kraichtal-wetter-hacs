@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from homeassistant.components.weather import WeatherEntity
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
@@ -26,6 +27,13 @@ class KraichtalWetterWeather(CoordinatorEntity, WeatherEntity):
         super().__init__(coordinator)
         self._attr_name = "Kraichtal Wetter Forecast"
         self._attr_unique_id = "kraichtal_wetter_forecast"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, getattr(coordinator, "entry_id", "kraichtal_wetter_api"))},
+            name="Kraichtal Wetter API",
+            manufacturer="Kraichtal Wetter",
+            model="Kraichtal Wetter Station",
+            configuration_url=getattr(coordinator, "api_url", ""),
+        )
 
     @property
     def available(self) -> bool:
