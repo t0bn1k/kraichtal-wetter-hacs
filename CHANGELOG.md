@@ -2,6 +2,10 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.2.1] - 2026-07-14
+### Geändert
+- Rebranding finalisiert
+
 ## [0.2.0] - 2026-07-14
 ### Geändert
 - Integration umbenannt und als `Kraichtal Wetter` angezeigt.
