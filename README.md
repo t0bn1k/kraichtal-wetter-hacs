@@ -204,4 +204,4 @@ Siehe `RELEASE_STRATEGY.md` für den empfohlenen Prozess zu Git-Tags, HACS-Relea
 
 ## Verweis auf den Plan
 
-Die ursprüngliche `plan.md` wurde aus dem Repository entfernt, damit das Repo sauber für einen ersten Test bleibt. Falls du sie benötigst, liegt sie nun auf dem Desktop als `plan.md`.
+Die `plan.md` wurde aus dem Repository entfernt, damit das Repo sauber für Tests und HACS-Veröffentlichung bleibt. Falls du sie benötigst, liegt sie nun auf dem Desktop als `plan.md`.
