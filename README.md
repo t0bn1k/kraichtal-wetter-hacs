@@ -114,4 +114,4 @@ refresh_interval: 300
 
 ## Repository
 
-Dieses Repository enthält die Custom Integration unter `custom_components/kraichtal_wetter_api` sowie die Dokumentation und das Changelog für die Integration.
+Dieses Repository enthält die Custom Integration unter `custom_components/kraichtal_wetter` sowie die Dokumentation und das Changelog für die Integration.
