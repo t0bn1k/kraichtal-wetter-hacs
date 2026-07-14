@@ -26,15 +26,15 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 - Integration-Icon als `logo.png` hinzugefügt (128×128) für HACS-/Integration-Anzeige
 - Dokumentation und Beispiele in `README.md` und `plan.md` aktualisiert
 
-## [0.1.3] - 2026-07-14
+## [0.1.4] - 2026-07-14
 ### Geändert
 - Fix: `DEFAULT_API_URL` importiert, damit die fest hinterlegte Kraichtal-API-URL als Fallback funktioniert.
 - Fix: Beispiel-URL in `plan.md` auf `https://kraichtal-wetter.de/dashboard/api.php` aktualisiert.
+- Fix: `async_forward_entry_setups` statt nicht existierender `async_forward_entry_setup` verwendet.
 
 ## Unveröffentlicht
 - Weitere Stabilitäts- und Fehlertests.
 - Optionales `CHANGELOG`-Anpassungsformat.
-- Fix: `async_forward_entry_setups` statt nicht existierender `async_forward_entry_setup` verwendet.
 
 ## [0.1.0] - 2026-07-14
 ### Geändert
