@@ -2,6 +2,8 @@
 
 Kraichtal Wetter ist eine Home Assistant Custom Integration, die aktuelle Wetterdaten aus der Kraichtal Wetter API als Sensoren und als `weather`-Entität bereitstellt.
 
+Datenquelle: https://kraichtal-wetter.de
+
 ## Installation
 
 ### Manuelle Installation
