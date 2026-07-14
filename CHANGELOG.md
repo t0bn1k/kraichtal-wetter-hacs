@@ -26,12 +26,12 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 - Integration-Icon als `logo.png` hinzugefügt (128×128) für HACS-/Integration-Anzeige
 - Dokumentation und Beispiele in `README.md` und `plan.md` aktualisiert
 
-## [0.1.7] - 2026-07-14
+## [0.1.8] - 2026-07-14
 ### Geändert
-- Fix: Home Assistant konforme `homeassistant.const`-Importe geprüft und sichergestellt.
-- Fix: Sicherer Release zur Installation der neuesten Version.
+- Fix: `TEMP_CELSIUS` und `PERCENTAGE` entfernt, stattdessen direkte Einheitzeichen verwendet.
+- Fix: Home Assistant konstante Importe erneut geprüft; nur `CONF_SCAN_INTERVAL` verbleibt.
 
-## [0.1.6] - 2026-07-14
+## [0.1.7] - 2026-07-14
 ### Geändert
 - Fix: `DEFAULT_API_URL` importiert, damit die fest hinterlegte Kraichtal-API-URL als Fallback funktioniert.
 - Fix: Beispiel-URL in `plan.md` auf `https://kraichtal-wetter.de/dashboard/api.php` aktualisiert.

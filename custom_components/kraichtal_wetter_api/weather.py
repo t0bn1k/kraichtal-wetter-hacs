@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from homeassistant.components.weather import WeatherEntity
-from homeassistant.const import TEMP_CELSIUS
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN

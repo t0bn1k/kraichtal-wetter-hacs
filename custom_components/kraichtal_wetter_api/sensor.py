@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import PERCENTAGE, TEMP_CELSIUS
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -12,19 +11,19 @@ SENSOR_TYPES = [
     EntityDescription(
         key="temp",
         name="Außentemperatur",
-        native_unit_of_measurement=TEMP_CELSIUS,
+        native_unit_of_measurement="°C",
         icon="mdi:thermometer",
     ),
     EntityDescription(
         key="feels_like",
         name="Gefühlt",
-        native_unit_of_measurement=TEMP_CELSIUS,
+        native_unit_of_measurement="°C",
         icon="mdi:thermometer-lines",
     ),
     EntityDescription(
         key="humidity",
         name="Luftfeuchtigkeit",
-        native_unit_of_measurement=PERCENTAGE,
+        native_unit_of_measurement="%",
         icon="mdi:water-percent",
     ),
     EntityDescription(
