@@ -21,7 +21,7 @@ Konfiguration (Beispiele)
 
 ```yaml
 weather_api_key: DEIN_API_KEY_HIER
-weather_api_url: https://api.example.com/weather
+weather_api_url: https://kraichtal-wetter.de/dashboard/api.php
 ```
 
 2) `configuration.yaml` (Integration)

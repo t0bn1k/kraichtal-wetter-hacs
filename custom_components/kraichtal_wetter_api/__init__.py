@@ -7,7 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONF_API_KEY, CONF_API_URL, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS
+from .const import CONF_API_KEY, CONF_API_URL, DEFAULT_API_URL, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS
 from .coordinator import KraichtalWetterApiClient
 
 _LOGGER = logging.getLogger(__name__)
