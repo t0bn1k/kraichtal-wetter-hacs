@@ -45,7 +45,7 @@ Empfehlung:
 {
   "domain": "wetterstation_api",
   "name": "Wetterstation API",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "documentation": "https://github.com/<dein-user>/kraichtal-wetter-hacs",
   "requirements": [],
   "dependencies": [],
@@ -186,7 +186,7 @@ git commit -m "Initial HACS-ready integration"
 4. Release-Tag setzen:
 
 ```bash
-git tag -a v1.0.0 -m "Initial release"
+git tag -a v0.0.1 -m "Initial release"
 git push --tags
 ```
 

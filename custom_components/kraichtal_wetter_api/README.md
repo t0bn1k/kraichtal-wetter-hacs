@@ -70,4 +70,4 @@ Dieses Repository ist als HACS Custom Repository aufgebaut. Die Integration muss
 
 - `manifest.json` muss `config_flow` oder `integration_type` definieren.
 - Das Repository braucht eine `README.md` und eine `LICENSE`.
-- Verwende Tags für Releases, z. B. `v1.0.0`.
+- Verwende Tags für Releases, z. B. `v0.0.1`.
