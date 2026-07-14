@@ -34,6 +34,7 @@ Alle signifikanten Änderungen an diesem Projekt werden in diesem Dokument festg
 ## Unveröffentlicht
 - Weitere Stabilitäts- und Fehlertests.
 - Optionales `CHANGELOG`-Anpassungsformat.
+- Fix: `async_forward_entry_setups` statt nicht existierender `async_forward_entry_setup` verwendet.
 
 ## [0.1.0] - 2026-07-14
 ### Geändert
