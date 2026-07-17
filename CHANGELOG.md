@@ -2,6 +2,18 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.4.0] - 2026-07-17
+### Geändert
+- Forecast-Implementierung auf `async_forecast_daily()` umgestellt (deprecated `forecast` Property entfernt).
+- Forecast-Felder auf `native_`-Präfix umgestellt (`native_temperature`, `native_templow`, `native_wind_speed`).
+- `native_temperature_unit` und `native_pressure` als Properties hinzugefügt.
+- `wind_bearing` und `native_wind_speed` als separate Properties hinzugefügt.
+
+### Behoben
+- Forecast-Datum wird nun korrekt aus `meta.generated` + Tages-Index generiert (RFC 3339 UTC).
+- API liefert kein `date`-Feld im `days`-Array – jetzt aus `meta.generated` berechnet.
+- Forecast-Caching eingeführt; Cache wird bei Coordinator-Update invalidiert.
+
 ## [0.3.0] - 2026-07-17
 ### Geändert
 - `iot_class` von `local_polling` zu `cloud_polling` korrigiert.
@@ -18,7 +30,7 @@ Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 - Options Flow: Abfrageintervall (`scan_interval`) kann nach der Installation geändert werden.
 - Null-Schutz in `weather.py` für `coordinator.data` und `current`.
 - `native_wind_speed_unit_of_measurement` in der Weather-Entität gesetzt.
-- Forecast-Nutzer `date`-Feld der API als `datetime`.
+- Forecast verwendet `date`-Feld der API als `datetime` (funktionierte nicht korrekt, siehe 0.4.0).
 - Eindeutige `unique_id` zur Vermeidung doppelter Konfigurationen.
 
 ### Entfernt
