@@ -2,6 +2,14 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.4.1] - 2026-07-17
+### Hinzugefügt
+- `hacs.json` im Repository-Root für korrekte HACS-Erkennung hinzugefügt.
+
+### Entfernt
+- Ungenutzte Bilddateien `logo.png` und `dark_logo.png` aus dem Integration-Root entfernt (nur `brand/` wird verwendet).
+- Ungenutzte `logo.svg` aus dem Repository-Root entfernt.
+
 ## [0.4.0] - 2026-07-17
 ### Geändert
 - Forecast-Implementierung auf `async_forecast_daily()` umgestellt (deprecated `forecast` Property entfernt).
