@@ -151,9 +151,10 @@ SENSOR_TYPES = [
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    coordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
+    data = hass.data[DOMAIN][entry.entry_id]
+    coordinator = data["coordinator"]
     async_add_entities(
-        [KraichtalWetterSensor(coordinator, description) for description in SENSOR_TYPES],
+        [KraichtalWetterSensor(coordinator, entry, description) for description in SENSOR_TYPES],
         True,
     )
 
@@ -177,22 +178,18 @@ def _resolve_current_value(data: dict[str, object], key: str):
 class KraichtalWetterSensor(CoordinatorEntity, SensorEntity):
     entity_description: SensorEntityDescription
 
-    def __init__(self, coordinator, description: SensorEntityDescription) -> None:
+    def __init__(self, coordinator, entry, description: SensorEntityDescription) -> None:
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_name = f"Kraichtal Wetter {description.name}"
         self._attr_unique_id = f"kraichtal_wetter_{description.key}"
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, getattr(coordinator, "entry_id", "kraichtal_wetter"))},
+            identifiers={(DOMAIN, entry.entry_id)},
             name="Kraichtal Wetter",
             manufacturer="Kraichtal Wetter",
             model="Kraichtal Wetter Station",
-            configuration_url=getattr(coordinator, "api_url", ""),
+            configuration_url=entry.data.get("api_url", ""),
         )
-
-    @property
-    def available(self) -> bool:
-        return self.coordinator.last_update_success
 
     @property
     def native_value(self):

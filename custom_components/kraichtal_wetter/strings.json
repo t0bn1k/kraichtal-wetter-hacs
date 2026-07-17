@@ -1,11 +1,31 @@
 {
-  "title": "Kraichtal Wetter",
   "config": {
     "step": {
       "user": {
         "title": "Kraichtal Wetter Konfiguration",
         "data": {
           "key": "API-Key (optional)",
+          "scan_interval": "Abfrageintervall in Sekunden"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Kraichtal Wetter – API-Key aktualisieren",
+        "data": {
+          "key": "Neuer API-Key"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Kraichtal Wetter ist bereits konfiguriert.",
+      "entry_not_found": "Konfigurationseintrag nicht gefunden.",
+      "reauth_successful": "API-Key erfolgreich aktualisiert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Kraichtal Wetter Einstellungen",
+        "data": {
           "scan_interval": "Abfrageintervall in Sekunden"
         }
       }

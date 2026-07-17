@@ -1,12 +1,12 @@
-import importlib
 import logging
 from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import CONF_API_KEY, CONF_API_URL, DEFAULT_API_URL, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS
 from .coordinator import KraichtalWetterClient
@@ -16,11 +16,6 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     return True
-
-
-def _import_platforms() -> None:
-    for platform in PLATFORMS:
-        importlib.import_module(f"custom_components.kraichtal_wetter.{platform}")
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -40,20 +35,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_method=client.async_update,
         update_interval=timedelta(seconds=scan_interval),
     )
-    coordinator.entry_id = entry.entry_id
-    coordinator.api_url = api_url
 
     try:
         await coordinator.async_config_entry_first_refresh()
     except Exception as err:
-        raise UpdateFailed(err)
+        raise ConfigEntryNotReady(err) from err
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
         "coordinator": coordinator,
         "client": client,
+        "entry": entry,
     }
 
-    await hass.async_add_executor_job(_import_platforms)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True

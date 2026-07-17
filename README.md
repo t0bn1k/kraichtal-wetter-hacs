@@ -14,22 +14,6 @@ Datenquelle: https://kraichtal-wetter.de
 4. Suche nach `Kraichtal Wetter`.
 5. Folge dem UI-Setup und gib deinen API-Key ein.
 
-### Optional: Konfiguration in YAML
-
-Die Integration ist primär für die UI-Konfiguration ausgelegt. Optional kannst du folgende Einstellungen in `configuration.yaml` hinterlegen:
-
-```yaml
-kraichtal_wetter:
-  key: !secret weather_api_key
-  scan_interval: 300
-```
-
-In `secrets.yaml`:
-
-```yaml
-weather_api_key: DEIN_API_KEY_HIER
-```
-
 ## Was bietet Kraichtal Wetter?
 
 - Aktuelle Wetterdaten aus der Kraichtal Wetter API
@@ -94,7 +78,6 @@ cards:
       - sensor.kraichtal_wetter_warnings
       - sensor.kraichtal_wetter_realtime
 ```
-```
 
 ### Verlauf
 
@@ -113,6 +96,8 @@ refresh_interval: 300
 - Die Integration erscheint in Home Assistant als `Kraichtal Wetter`.
 - Nutzer geben nur einen API-Key ein; die API-URL ist fest in der Integration hinterlegt.
 - Alle Entitäten werden als Teil desselben Geräts in der Integrationen-Ansicht angezeigt.
+- Der API-Key kann jederzeit über Einstellungen → Geräte & Dienste → Kraichtal Wetter → Konfiguration geändert werden.
+- Das Abfrageintervall kann über die Optionen (Drei-Punkte-Menü → Optionen) angepasst werden.
 
 ## Repository
 

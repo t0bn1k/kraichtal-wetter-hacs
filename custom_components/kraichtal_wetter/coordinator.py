@@ -1,12 +1,10 @@
 import logging
 from typing import Any
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from aiohttp import ClientResponseError
 
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
-from .const import CONF_API_KEY, CONF_API_URL
+from homeassistant.helpers.update_coordinator import UpdateFailed
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -17,11 +15,20 @@ class KraichtalWetterClient:
         self._api_key = api_key
         self._session = session
 
+    def _build_url(self) -> str:
+        parsed = urlparse(self._api_url)
+        params = parse_qs(parsed.query)
+
+        has_key = any(k in params for k in ("key", "api_key", "apikey"))
+
+        if self._api_key and not has_key:
+            params["key"] = [self._api_key]
+
+        flat = {k: v[0] for k, v in params.items()}
+        return urlunparse(parsed._replace(query=urlencode(flat)))
+
     async def async_get_data(self) -> dict[str, Any]:
-        url = self._api_url
-        if self._api_key and "key=" not in url and "api_key=" not in url and "apikey=" not in url:
-            separator = "&" if "?" in url else "?"
-            url = f"{url}{separator}key={self._api_key}"
+        url = self._build_url()
 
         response = await self._session.get(url, timeout=10)
         response.raise_for_status()
@@ -34,8 +41,9 @@ class KraichtalWetterClient:
 
     async def async_update(self) -> dict[str, Any]:
         try:
-            data = await self.async_get_data()
-            return data
+            return await self.async_get_data()
+        except UpdateFailed:
+            raise
         except ClientResponseError as err:
             _LOGGER.error("Kraichtal Wetter HTTP error: %s", err)
             raise UpdateFailed(err)
