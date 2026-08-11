@@ -21,7 +21,7 @@ jobs:
           TAG=${GITHUB_REF#refs/tags/}
           TAG_NO_V=${TAG#v}
           # Extract the changelog section for the tag; fallback to full CHANGELOG.md
-          awk '/^## \['"$TAG_NO_V"'\]/{p=1; next} /^## \[/{p=0} p{print}' CHANGELOG.md > release_notes.md || true
+          awk -v tag="$TAG_NO_V" 'index($0, "## [" tag "]") == 1 {p=1; next} /^## \[/{p=0} p{print}' CHANGELOG.md > release_notes.md || true
           if [ ! -s release_notes.md ]; then cat CHANGELOG.md > release_notes.md; fi
           echo "Generated release_notes.md"
 
@@ -30,7 +30,7 @@ jobs:
         with:
           tag: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
-          body_path: release_notes.md
+          bodyFile: release_notes.md
           allowUpdates: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
