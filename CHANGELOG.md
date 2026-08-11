@@ -2,6 +2,11 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.4.2] - 2026-08-11
+### Hinzugefügt
+- `brand/`-Ordner vervollständigt: 8 Brand-Bilder (icon/logo + `@2x`-Varianten + `dark_*`-Varianten) für lokale Auslieferung über die Brands Proxy API (HA 2026.3+).
+- README um `HACS-Custom`-Badge und Installationsanleitung über HACS inkl. „In Home Assistant öffnen"-Button ergänzt.
+
 ## [0.4.1] - 2026-07-17
 ### Hinzugefügt
 - `hacs.json` im Repository-Root für korrekte HACS-Erkennung hinzugefügt.
