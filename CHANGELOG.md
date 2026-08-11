@@ -2,6 +2,10 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.4.3] - 2026-08-11
+### Geändert
+- README: Hinweis unter dem „In Home Assistant öffnen"-Button ergänzt, dass der Browser die Instanz-URL merkt und diese bei geändertem Port (z. B. Standard-Port 80 statt `:8123`) über das Stift-Symbol auf der my.home-assistant.io-Seite korrigiert werden muss.
+
 ## [0.4.2] - 2026-08-11
 ### Hinzugefügt
 - `brand/`-Ordner vervollständigt: 8 Brand-Bilder (icon/logo + `@2x`-Varianten + `dark_*`-Varianten) für lokale Auslieferung über die Brands Proxy API (HA 2026.3+).
