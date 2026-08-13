@@ -2,6 +2,10 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.4.4] - 2026-08-13
+### Behoben
+- Sicherheitsfix: API-Key konnte bei HTTP-Fehlern über `home-assistant.log` geleakt werden, da `aiohttp.ClientResponseError` die vollständige Request-URL (inkl. `key`-Query-Parameter) in seiner String-Repräsentation enthält. `coordinator.py` loggt jetzt nur noch Status/Fehlertyp und reicht die Original-Exception nur noch als `__cause__` (`from err`) weiter, statt sie in die geloggte bzw. an `UpdateFailed` übergebene Nachricht einzubetten.
+
 ## [0.4.3] - 2026-08-11
 ### Geändert
 - README: Hinweis unter dem „In Home Assistant öffnen"-Button ergänzt, dass der Browser die Instanz-URL merkt und diese bei geändertem Port (z. B. Standard-Port 80 statt `:8123`) über das Stift-Symbol auf der my.home-assistant.io-Seite korrigiert werden muss.

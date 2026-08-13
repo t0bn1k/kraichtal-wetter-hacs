@@ -1,7 +1,7 @@
 {
   "domain": "kraichtal_wetter",
   "name": "Kraichtal Wetter",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "documentation": "https://github.com/t0bn1k/kraichtal-wetter-hacs",
   "requirements": [],
   "dependencies": [],

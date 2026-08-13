@@ -45,8 +45,10 @@ class KraichtalWetterClient:
         except UpdateFailed:
             raise
         except ClientResponseError as err:
-            _LOGGER.error("Kraichtal Wetter HTTP error: %s", err)
-            raise UpdateFailed(err)
+            # Do not log `err` directly: aiohttp includes the full request
+            # URL (with the API key query param) in its string repr.
+            _LOGGER.error("Kraichtal Wetter HTTP error: %s %s", err.status, err.message)
+            raise UpdateFailed(f"HTTP error {err.status}") from err
         except Exception as err:  # noqa: BLE001
-            _LOGGER.error("Kraichtal Wetter update failed: %s", err)
-            raise UpdateFailed(err)
+            _LOGGER.error("Kraichtal Wetter update failed: %s", type(err).__name__)
+            raise UpdateFailed(f"Update failed: {type(err).__name__}") from err
