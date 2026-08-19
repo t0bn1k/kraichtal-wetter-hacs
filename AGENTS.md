@@ -12,21 +12,35 @@ Home-Assistant-Custom-Integration für die Kraichtal-Wetter-API. Kein Build-Syst
 
 ## Wichtige Konventionen
 
-- **API-Key-Feldname**: `key` (nicht `api_key`). Rückwärtskompatibel: `__init__.py:23-25` akzeptiert auch `api_key` / `apikey` aus alten Installationen.
-- **API-URL** ist in `const.py:9` hardcodiert — Nutzer geben nur den Key an.
+- **API-Key-Feldname**: `key` (nicht `api_key`). Rückwärtskompatibel: `async_setup_entry` in `__init__.py` akzeptiert auch `api_key` / `apikey` aus alten Installationen.
+- **API-URL** ist in `const.py` hardcodiert — Nutzer geben nur den Key an.
+- **Entity-Namen kommen aus `translations/`**, nicht aus `name=` im Code: `SENSOR_TYPES` setzt `translation_key`, die Namen stehen unter `entity.sensor.<translation_key>.name`.
+- **Entity-IDs leiten sich vom *englischen* Namen ab** (HA generiert Object-IDs bewusst sprachunabhängig aus `en.json`): `"Max gust"` → `sensor.kraichtal_wetter_max_gust`. Die Namen in `translations/en.json` sind damit **öffentliche API** — sie zu ändern verschiebt die Entity-IDs für Neuinstallationen. `de.json` beeinflusst nur die Anzeige. Vollständige Zuordnung in `README.md`.
+- **Entity-ID-Migration**: `_SENSOR_ENTITY_ID_MIGRATION` in `__init__.py` benennt die vor 0.5.0 aus deutschen Namen erzeugten IDs um. Läuft idempotent bei jedem Setup vor `async_forward_entry_setups` und lässt selbst umbenannte Entitäten in Ruhe. Beim Hinzufügen eines Sensors ist hier nichts zu tun; beim Umbenennen eines englischen Namens schon.
 - **Sensoren** nutzen Dot-Notation in `sensor.py` um verschachtelte API-Felder aufzulösen (z.B. `station_today.tmax` → `data["current"]["station_today"]["tmax"]`).
-- **Forecast-Datum** wird aus `meta.generated` + Tages-Index berechnet (API liefert kein `date` pro Tag). `weather.py:82-122`.
-- **Forecast-Caching**: `async_forecast_daily()` cached bis `async_update()` invalidiert.
-- **ICON_MAP** in `weather.py` übersetzt API-Icon-Namen in HA-Wetterbedingungen.
-- **Beim ersten Refresh** wird `ConfigEntryNotReady` geworfen → HA wiederholt automatisch.
+- **Forecast-Datum** wird aus `meta.generated` + Tages-Index berechnet (API liefert kein `date` pro Tag); Umrechnung über `dt_util.start_of_local_day()` pro Tag, damit DST-Wechsel korrekt bleiben.
+- **Forecast-Caching**: `async_forecast_daily()` cached, `_handle_coordinator_update()` invalidiert. Nicht `async_update()` verwenden — `CoordinatorEntity` setzt `should_poll = False`, die Methode würde nie aufgerufen.
+- **ICON_MAP** in `weather.py` übersetzt API-Icon-Namen in HA-Wetterbedingungen. Nur Werte aus `ATTR_CONDITION_*` sind gültig; unbekannte Icons ergeben bewusst `None` statt einer falschen Bedingung.
+- **Auth-Fehler**: 401/403 → `ConfigEntryAuthFailed` (startet Reauth), alles andere → `UpdateFailed`. Setzt voraus, dass der Coordinator mit `config_entry=entry` erzeugt wird.
+- **API-Key nie loggen**: `aiohttp.ClientResponseError` enthält die vollständige URL inkl. `key`-Parameter in seiner String-Repräsentation. Deshalb in `coordinator.py` nur Status/`err.message` loggen und `from None` statt `from err` verwenden.
 - **Default `scan_interval`**: 300 s (konfigurierbar via Options-Flow)
-- **Reauth-Flow** vorhanden (API-Key via UI aktualisierbar).
 - **hass.data**: `hass.data[DOMAIN][entry.entry_id]` speichert `{"coordinator", "client", "entry"}`.
-- **UI-Sprache**: Deutsch (`strings.json`, Sensor-Namen)
+- **UI-Sprache**: Deutsch. `strings.json` ist nur Quelle — zur Laufzeit lädt HA `translations/de.json` / `translations/en.json`; beide müssen mitgepflegt werden.
 
 ## CI / Release
 
-Einzige Pipeline: `.github/workflows/release.yml` — Tag `v*.*.*` erzeugt GitHub Release mit automatisch extrahiertem Changelog-Eintrag.
+- `.github/workflows/release.yml` — Tag `v*.*.*` erzeugt GitHub Release mit automatisch extrahiertem Changelog-Eintrag.
+- `.github/workflows/validate.yml` — HACS-Action und Hassfest (Push, PR, nächtlich). Voraussetzung für die Aufnahme in den HACS-Standardkatalog.
+
+Beim Release: `manifest.json` (`version`) und der CHANGELOG-Eintrag müssen zur Tag-Version passen, sonst greift die Changelog-Extraktion in `release.yml` nicht.
+
+### Downloads-Badge
+
+Bewusst **nicht** im README. Der übliche Badge liest `https://analytics.home-assistant.io/custom_integrations.json` unter `$.<domain>.total`; dort ist `kraichtal_wetter` nicht enthalten (die Liste erfasst nur Integrationen aus dem HACS-Standardkatalog mit Analytics-Opt-in der Nutzer), der Badge liefert also „no result". Ein GitHub-Downloadzähler hilft ebenfalls nicht, da die Releases keine Assets tragen und nur Assets gezählt werden. Nach Aufnahme in den Standardkatalog nutzbar:
+
+```
+[![Downloads](https://img.shields.io/badge/dynamic/json?url=https://analytics.home-assistant.io/custom_integrations.json&query=$.kraichtal_wetter.total&label=Downloads&color=41BDF5&style=for-the-badge)](https://analytics.home-assistant.io/)
+```
 
 ## Verzeichnisstruktur
 
@@ -38,11 +52,11 @@ custom_components/kraichtal_wetter/
 ├── coordinator.py       # KraichtalWetterClient (HTTP)
 ├── sensor.py            # 22 Sensoren
 ├── weather.py           # WeatherEntity + Forecast
-├── strings.json         # Deutsche UI-Texte
+├── strings.json         # Quelle der UI-Texte (nicht zur Laufzeit geladen)
+├── translations/        # de.json + en.json — das lädt HA tatsächlich
 └── brand/               # 8 Brand-Bilder (icon/logo + @2x + dark_*), lokale Auslieferung seit HA 2026.3
 hacs.json                # HACS-Metadaten
 lovelace/                # Beispiel-Dashboards
-scripts/generate_logo.py # Entwickler-Werkzeug
 ```
 
 ## Stil (im Code)
@@ -51,3 +65,12 @@ scripts/generate_logo.py # Entwickler-Werkzeug
 - `voluptuous` + `cv` für Schemata
 - `urllib.parse` für URL-Bau (kein String-Concatenation)
 - `CoordinatorEntity` + `SensorEntityDescription`-Pattern
+- Einheiten/Geräteklassen über HA-Enums (`UnitOfTemperature`, `SensorDeviceClass`, …), nicht als String-Literale
+
+## Brand-Bilder
+
+`brand/` enthält bewusst nur die 4 Icons: `icon.png` (256×256), `icon@2x.png` (512×512) und die beiden `dark_`-Varianten — exakt die Maße, die home-assistant/brands vorschreibt. Ein Logo existiert nicht; laut Spezifikation wird dann `icon.png` ausgeliefert, Dark-Varianten fallen auf die hellen zurück.
+
+Die früheren `logo*.png` waren quadratische Kopien der Icons in 512/1024 px und verletzten die Logo-Vorgabe (Querformat, kürzeste Seite 128–256 px bzw. 256–512 px). Ein echtes Logo müsste diesen Maßen entsprechen — keine Icon-Kopie.
+
+Dokumentation nur im Root-`README.md` pflegen; im Integrationsordner liegt bewusst keine zweite README mehr.

@@ -1,12 +1,15 @@
 # Kraichtal Wetter
 
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![Release](https://img.shields.io/github/v/release/t0bn1k/kraichtal-wetter-hacs?style=for-the-badge)](https://github.com/t0bn1k/kraichtal-wetter-hacs/releases)
+[![Lizenz](https://img.shields.io/github/license/t0bn1k/kraichtal-wetter-hacs?style=for-the-badge)](LICENSE)
+[![Validate](https://img.shields.io/github/actions/workflow/status/t0bn1k/kraichtal-wetter-hacs/validate.yml?style=for-the-badge&label=validate)](https://github.com/t0bn1k/kraichtal-wetter-hacs/actions/workflows/validate.yml)
+
 Kraichtal Wetter ist eine Home Assistant Custom Integration, die aktuelle Wetterdaten aus der Kraichtal Wetter API als Sensoren und als `weather`-Entität bereitstellt.
 
 Datenquelle: https://kraichtal-wetter.de
 
 ## Installation
-
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
 ### Installation über HACS
 
@@ -30,35 +33,41 @@ Datenquelle: https://kraichtal-wetter.de
 ## Was bietet Kraichtal Wetter?
 
 - Aktuelle Wetterdaten aus der Kraichtal Wetter API
-- Forecast über `weather.kraichtal_wetter_forecast`
+- Forecast über `weather.kraichtal_wetter`
 - Erweiterte Sensoren aus `station_today`
 - Gruppierte Entitäten unter einem Gerät in der Integrationen-Ansicht
 
 ## Unterstützte Entitäten
 
-- `weather.kraichtal_wetter_forecast`
-- `sensor.kraichtal_wetter_temp`
-- `sensor.kraichtal_wetter_feels_like`
-- `sensor.kraichtal_wetter_dewpoint`
-- `sensor.kraichtal_wetter_humidity`
-- `sensor.kraichtal_wetter_pressure`
-- `sensor.kraichtal_wetter_wind`
-- `sensor.kraichtal_wetter_wind_dir`
-- `sensor.kraichtal_wetter_gust_max`
-- `sensor.kraichtal_wetter_solar`
-- `sensor.kraichtal_wetter_rain`
-- `sensor.kraichtal_wetter_tmax_today`
-- `sensor.kraichtal_wetter_tmin_today`
-- `sensor.kraichtal_wetter_rain_today`
-- `sensor.kraichtal_wetter_warnings`
-- `sensor.kraichtal_wetter_obs_date`
-- `sensor.kraichtal_wetter_obs_time`
-- `sensor.kraichtal_wetter_realtime`
-- `sensor.kraichtal_wetter_station_today_tmax`
-- `sensor.kraichtal_wetter_station_today_tmin`
-- `sensor.kraichtal_wetter_station_today_gust`
-- `sensor.kraichtal_wetter_station_today_press_max`
-- `sensor.kraichtal_wetter_station_today_press_min`
+Die Entity-IDs sind sprachunabhängig (englisch), die Anzeigenamen folgen der eingestellten Home-Assistant-Sprache:
+
+| Entität | Anzeige (Deutsch) | API-Feld |
+| --- | --- | --- |
+| `weather.kraichtal_wetter` | Kraichtal Wetter | – |
+| `sensor.kraichtal_wetter_outdoor_temperature` | Außentemperatur | `temp` |
+| `sensor.kraichtal_wetter_feels_like` | Gefühlt | `feels_like` |
+| `sensor.kraichtal_wetter_dew_point` | Taupunkt | `dewpoint` |
+| `sensor.kraichtal_wetter_humidity` | Luftfeuchtigkeit | `humidity` |
+| `sensor.kraichtal_wetter_pressure` | Luftdruck | `pressure` |
+| `sensor.kraichtal_wetter_wind_speed` | Windgeschwindigkeit | `wind` |
+| `sensor.kraichtal_wetter_wind_direction` | Windrichtung | `wind_dir` |
+| `sensor.kraichtal_wetter_max_gust` | Böen max | `gust_max` |
+| `sensor.kraichtal_wetter_solar_irradiance` | Solarstrahlung | `solar` |
+| `sensor.kraichtal_wetter_precipitation` | Niederschlag aktuell | `rain` |
+| `sensor.kraichtal_wetter_max_temperature_today` | Maximale Temperatur heute | `tmax_today` |
+| `sensor.kraichtal_wetter_min_temperature_today` | Minimale Temperatur heute | `tmin_today` |
+| `sensor.kraichtal_wetter_precipitation_today` | Niederschlag heute | `rain_today` |
+| `sensor.kraichtal_wetter_warnings` | Warnungen | `warnings` |
+| `sensor.kraichtal_wetter_observation_date` | Beobachtungsdatum | `obs_date` |
+| `sensor.kraichtal_wetter_observation_time` | Beobachtungszeit | `obs_time` |
+| `sensor.kraichtal_wetter_realtime_data` | Echtzeitdaten | `realtime` |
+| `sensor.kraichtal_wetter_station_max_temperature_today` | Station heute Tmax | `station_today.tmax` |
+| `sensor.kraichtal_wetter_station_min_temperature_today` | Station heute Tmin | `station_today.tmin` |
+| `sensor.kraichtal_wetter_station_max_gust_today` | Station heute Böe | `station_today.gust` |
+| `sensor.kraichtal_wetter_station_max_pressure_today` | Station heute Luftdruck max | `station_today.press_max` |
+| `sensor.kraichtal_wetter_station_min_pressure_today` | Station heute Luftdruck min | `station_today.press_min` |
+
+> **Upgrade von 0.4.x:** In 0.5.0 wurden die Entity-IDs von den deutschen Namen (`sensor.kraichtal_wetter_boen_max`) auf sprachunabhängige englische umgestellt. Die Integration benennt bestehende Entitäten beim ersten Start automatisch um, sodass die Recorder-Historie erhalten bleibt. Eigene Dashboards und Automationen müssen dagegen von Hand angepasst werden — Home Assistant schreibt Verweise dort nicht mit um.
 
 ## Lovelace Beispiele
 
@@ -68,28 +77,28 @@ Datenquelle: https://kraichtal-wetter.de
 type: vertical-stack
 cards:
   - type: weather-forecast
-    entity: weather.kraichtal_wetter_forecast
+    entity: weather.kraichtal_wetter
 
   - type: entities
     title: Kraichtal Wetter – Aktuelle Werte
     show_header_toggle: false
     entities:
-      - sensor.kraichtal_wetter_temp
+      - sensor.kraichtal_wetter_outdoor_temperature
       - sensor.kraichtal_wetter_feels_like
       - sensor.kraichtal_wetter_humidity
       - sensor.kraichtal_wetter_pressure
-      - sensor.kraichtal_wetter_wind
-      - sensor.kraichtal_wetter_rain
+      - sensor.kraichtal_wetter_wind_speed
+      - sensor.kraichtal_wetter_precipitation
 
   - type: entities
     title: Kraichtal Wetter – Tageswerte
     show_header_toggle: false
     entities:
-      - sensor.kraichtal_wetter_tmax_today
-      - sensor.kraichtal_wetter_tmin_today
-      - sensor.kraichtal_wetter_rain_today
+      - sensor.kraichtal_wetter_max_temperature_today
+      - sensor.kraichtal_wetter_min_temperature_today
+      - sensor.kraichtal_wetter_precipitation_today
       - sensor.kraichtal_wetter_warnings
-      - sensor.kraichtal_wetter_realtime
+      - sensor.kraichtal_wetter_realtime_data
 ```
 
 ### Verlauf
@@ -98,7 +107,7 @@ cards:
 type: history-graph
 title: Verlauf Temperatur & Luftfeuchte
 entities:
-  - sensor.kraichtal_wetter_temp
+  - sensor.kraichtal_wetter_outdoor_temperature
   - sensor.kraichtal_wetter_humidity
 hours_to_show: 24
 refresh_interval: 300
@@ -115,3 +124,7 @@ refresh_interval: 300
 ## Repository
 
 Dieses Repository enthält die Custom Integration unter `custom_components/kraichtal_wetter` sowie die Dokumentation und das Changelog für die Integration.
+
+## Lizenz
+
+[MIT](LICENSE)

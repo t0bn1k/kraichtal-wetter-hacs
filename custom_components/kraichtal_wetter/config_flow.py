@@ -19,9 +19,6 @@ class KraichtalWetterConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         if user_input is not None:
             data = dict(user_input)
-            # Normalize legacy field names
-            if "api_key" in data and CONF_API_KEY not in data:
-                data[CONF_API_KEY] = data.pop("api_key")
             data[CONF_API_URL] = DEFAULT_API_URL
 
             await self.async_set_unique_id(DOMAIN)

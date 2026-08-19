@@ -2,9 +2,46 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.5.0] - 2026-08-19
+### Geändert (Breaking)
+- **Entity-IDs der Sensoren umgestellt.** Bisher erzeugte Home Assistant sie aus den fest im Code stehenden deutschen Namen (`sensor.kraichtal_wetter_boen_max`, `sensor.kraichtal_wetter_gefuhlt`). Die Namen liegen jetzt in `translations/`, wodurch die IDs aus den sprachunabhängigen englischen Namen entstehen (`sensor.kraichtal_wetter_max_gust`, `sensor.kraichtal_wetter_feels_like`). Vollständige Zuordnung in der README.
+  - Bestehende Entitäten werden beim ersten Start automatisch umbenannt, die Recorder-Historie bleibt damit erhalten. Entitäten, deren ID von Hand geändert wurde, bleiben unangetastet.
+  - **Eigene Dashboards, Automationen, Skripte und Templates müssen manuell angepasst werden** — Home Assistant schreibt Verweise dort nicht mit um.
+- Sensornamen werden über `translation_key` aufgelöst; die Anzeige folgt jetzt der Home-Assistant-Sprache (Deutsch und Englisch enthalten) statt fest deutsch zu sein.
+- **Die Wetter-Entität ist jetzt die primäre Entität des Geräts** und heißt `weather.kraichtal_wetter` statt `weather.kraichtal_wetter_forecast`; als Anzeigename trägt sie nur noch „Kraichtal Wetter". Sie wird von derselben automatischen Umbenennung erfasst wie die Sensoren.
+
+## [0.4.5] - 2026-08-19
+### Behoben
+- Sicherheitsfix (Nachtrag zu 0.4.4): Der API-Key konnte weiterhin über die Exception-Chain austreten. `UpdateFailed` wurde mit `from err` geworfen, wodurch die ursprüngliche `ClientResponseError` als `__cause__` erhalten blieb — inklusive der vollständigen URL mit `key`-Parameter in ihrer String-Repräsentation. Wird die Kette irgendwo mit `exc_info=True` ausgegeben, landet der Key doch im Log. Jetzt `from None`.
+- Reauth-Flow war nicht erreichbar: HTTP 401/403 wurde als `UpdateFailed` behandelt, sodass ein ungültiger API-Key nur endlos Fehler protokollierte, statt den vorhandenen „API-Key aktualisieren"-Dialog zu öffnen. Diese Status-Codes lösen nun `ConfigEntryAuthFailed` aus.
+- `DataUpdateCoordinator` wird mit `config_entry=entry` erzeugt — ohne diese Zuordnung kann der Coordinator den Reauth-Flow gar nicht starten.
+- Ungültige Wetterbedingung: `"sunstorm"` war auf `"storm"` gemappt, was keine gültige Home-Assistant-Bedingung ist und in der UI nicht dargestellt wurde. Jetzt `"lightning-rainy"`.
+- Forecast-Cache wurde nie invalidiert: Die Invalidierung hing an `async_update()`, das bei `CoordinatorEntity` wegen `should_poll = False` nie aufgerufen wird. Die Vorhersage blieb dadurch dauerhaft auf dem ersten Abruf stehen (die aktuellen Messwerte waren korrekt, was den Fehler verdeckt hat). Läuft jetzt über `_handle_coordinator_update()`.
+- Forecast-Zeitzone: Der UTC-Offset `+00:00` wurde unabhängig von der tatsächlichen Zeitzone von `meta.generated` fest an den Zeitstempel gehängt. Umgestellt auf `dt_util.start_of_local_day()` pro Tag, wodurch auch Sommerzeit-Wechsel korrekt behandelt werden.
+- `translations/de.json` und `translations/en.json` ergänzt. Home Assistant lädt bei Custom Integrations zur Laufzeit ausschließlich `translations/`; die Texte aus `strings.json` waren in der Oberfläche wirkungslos.
+- Entity-IDs in README und Lovelace-Beispiel korrigiert: Dokumentiert waren durchgängig die API-Feldnamen (`sensor.kraichtal_wetter_temp`), tatsächlich erzeugt Home Assistant die IDs aus den deutschen Anzeigenamen (`sensor.kraichtal_wetter_aussentemperatur`). Betraf alle 22 Sensoren.
+
+### Hinzugefügt
+- `state_class` für alle numerischen Sensoren, damit Home Assistant Langzeitstatistiken aufzeichnet (`measurement`, für `rain_today` `total_increasing`). `wind_dir` bleibt bewusst ohne, da Mittelwerte über den 0°/360°-Übergang keine sinnvollen Werte ergeben.
+- Passende `device_class`-Angaben für Wind, Solarstrahlung und Niederschlag; Einheiten und Geräteklassen durchgängig über HA-Enums statt String-Literale.
+- `.gitignore` (u. a. `__pycache__/`).
+- `country: "DE"` in `hacs.json` — laut HACS-Aufnahmekriterien anzugeben, wenn ein Repository nur ein einzelnes Land bedient.
+- `.github/workflows/validate.yml`: HACS-Action und Hassfest, beides Voraussetzung für die Aufnahme in den HACS-Standardkatalog.
+- `LICENSE` (MIT) — bis dahin galt trotz öffentlichem Repository das Standard-Urheberrecht, eine Nachnutzung war damit formal nicht gestattet. Die HACS-Action prüft inzwischen auf eine Lizenz.
+
+### Entfernt
+- `custom_components/kraichtal_wetter/README.md`: wurde von nichts ausgeliefert (HACS rendert das Root-README), enthielt die veralteten Entity-IDs und beschrieb eine YAML-Konfiguration über `configuration.yaml`, die die Integration nie unterstützt hat — ein dort hinterlegter API-Key wurde wirkungslos ignoriert.
+- `scripts/generate_logo.py`: nicht lauffähig (schrieb nach `custom_components/kraichtal_wetter_api/`, das seit 0.2.0 nicht mehr existiert), benötigte ein nirgends deklariertes Pillow und erzeugte redundante Kopien der Brand-Icons.
+
+### Geändert
+- Unbekannte Icon-Namen liefern jetzt `None` statt `"sunny"` — eine unbekannte Bedingung wurde vorher als „sonnig" ausgegeben. Unbekannte Icons werden auf Debug-Level protokolliert.
+- Überflüssiges `async_setup` und ein zu breites `except Exception` in `async_setup_entry` entfernt; letzteres hätte `ConfigEntryAuthFailed` beim Setup verschluckt.
+- HTTP-Timeout als `aiohttp.ClientTimeout` statt als nackter Zahl; Response wird als Context-Manager verwendet.
+- Entitäten nutzen `_attr_has_entity_name` (bestehende Entity-IDs bleiben unverändert).
+
 ## [0.4.4] - 2026-08-13
 ### Behoben
-- Sicherheitsfix: API-Key konnte bei HTTP-Fehlern über `home-assistant.log` geleakt werden, da `aiohttp.ClientResponseError` die vollständige Request-URL (inkl. `key`-Query-Parameter) in seiner String-Repräsentation enthält. `coordinator.py` loggt jetzt nur noch Status/Fehlertyp und reicht die Original-Exception nur noch als `__cause__` (`from err`) weiter, statt sie in die geloggte bzw. an `UpdateFailed` übergebene Nachricht einzubetten.
+- Sicherheitsfix: API-Key konnte bei HTTP-Fehlern über `home-assistant.log` geleakt werden, da `aiohttp.ClientResponseError` die vollständige Request-URL (inkl. `key`-Query-Parameter) in seiner String-Repräsentation enthält. `coordinator.py` loggt seitdem nur noch Status und `err.message` statt die Exception selbst. (Unvollständig — siehe 0.4.5.)
 
 ## [0.4.3] - 2026-08-11
 ### Geändert
