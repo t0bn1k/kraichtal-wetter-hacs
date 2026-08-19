@@ -12,32 +12,50 @@ _LOGGER = logging.getLogger(__name__)
 REQUEST_TIMEOUT = ClientTimeout(total=10)
 
 # Status codes that mean the API key is wrong or no longer valid; these must
-# trigger the reauth flow instead of a plain update failure.
+# trigger the reauth flow instead of a plain update failure. Confirmed against
+# the API: 401 = key missing, 403 = key invalid.
 AUTH_ERROR_STATUSES = (401, 403)
+
+# Query parameter names the API historically accepted for the key.
+KEY_PARAM_NAMES = ("key", "api_key", "apikey")
+
+
+def _split_api_key(api_url: str) -> tuple[str, str | None]:
+    """Split a key carried in the URL off into a separate value.
+
+    The API accepts the key either as a `key` query parameter or as an
+    `X-API-Key` header. We always use the header: aiohttp embeds the request
+    URL in `ClientResponseError`'s string form, so a key in the query string
+    can reach the log through any traceback or exception chain — which is
+    exactly how it leaked before 0.4.4. Headers are not part of that output.
+    """
+    parsed = urlparse(api_url)
+    params = parse_qs(parsed.query)
+
+    key = next((params[name][0] for name in KEY_PARAM_NAMES if params.get(name)), None)
+    for name in KEY_PARAM_NAMES:
+        params.pop(name, None)
+
+    flat = {k: v[0] for k, v in params.items()}
+    return urlunparse(parsed._replace(query=urlencode(flat))), key
 
 
 class KraichtalWetterClient:
     def __init__(self, api_url: str, api_key: str | None, session) -> None:
-        self._api_url = api_url
-        self._api_key = api_key
+        # Any key configured into the URL is moved to the header too, so no
+        # code path can put it back into a request URL.
+        self._api_url, url_key = _split_api_key(api_url)
+        self._api_key = api_key or url_key
         self._session = session
 
-    def _build_url(self) -> str:
-        parsed = urlparse(self._api_url)
-        params = parse_qs(parsed.query)
-
-        has_key = any(k in params for k in ("key", "api_key", "apikey"))
-
-        if self._api_key and not has_key:
-            params["key"] = [self._api_key]
-
-        flat = {k: v[0] for k, v in params.items()}
-        return urlunparse(parsed._replace(query=urlencode(flat)))
+    @property
+    def _headers(self) -> dict[str, str]:
+        return {"X-API-Key": self._api_key} if self._api_key else {}
 
     async def async_get_data(self) -> dict[str, Any]:
-        url = self._build_url()
-
-        async with self._session.get(url, timeout=REQUEST_TIMEOUT) as response:
+        async with self._session.get(
+            self._api_url, headers=self._headers, timeout=REQUEST_TIMEOUT
+        ) as response:
             response.raise_for_status()
             data = await response.json()
 
@@ -55,10 +73,10 @@ class KraichtalWetterClient:
         except UpdateFailed:
             raise
         except ClientResponseError as err:
-            # Do not log `err` directly, and do not chain it via `from err`:
-            # aiohttp includes the full request URL (with the API key query
-            # param) in its string repr, which would otherwise still leak
-            # via the exception's __cause__ if the chain is ever printed.
+            # Never log `err` itself and never chain it via `from err`: its
+            # string form carries the request URL. The key no longer rides in
+            # that URL (see _split_api_key), but keep both guards so a future
+            # query parameter cannot quietly become a leak again.
             if err.status in AUTH_ERROR_STATUSES:
                 _LOGGER.warning(
                     "Kraichtal Wetter rejected the API key (HTTP %s), starting reauth",

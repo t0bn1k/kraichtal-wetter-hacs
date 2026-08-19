@@ -2,6 +2,14 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.5.1] - 2026-08-19
+### Geändert
+- **Der API-Key wird jetzt als `X-API-Key`-Header übertragen statt als `key`-Query-Parameter.** Damit ist die Ursache des Log-Lecks beseitigt statt nur abgefangen: `aiohttp.ClientResponseError` bettet die Request-URL in seine String-Repräsentation ein, Header dagegen nicht. Der Key kann so über keinen Traceback, keine Exception-Chain und kein Debug-Logging der HTTP-Ebene mehr austreten — auch nicht über Code, der erst künftig hinzukommt.
+  - Ein in der konfigurierten URL hinterlegter Key (`key`, `api_key`, `apikey`) wird beim Start ausgelesen und ebenfalls in den Header verschoben; die URL wird davon bereinigt. Kein Codepfad setzt den Key noch in eine URL.
+  - Bewusst **ohne** Rückfall auf den Query-Parameter: Genau dieser Pfad wäre der undichte. Sollte der Header serverseitig entfallen, quittiert die API das mit 401 und der Reauth-Dialog geht auf — sichtbar statt still.
+  - Die defensiven Vorkehrungen aus 0.4.5 (kein `err` im Log, `from None`) bleiben als zweite Ebene bestehen.
+- `AUTH_ERROR_STATUSES` gegen die API verifiziert: 401 bei fehlendem, 403 bei ungültigem Key — beide lösen den Reauth-Flow aus.
+
 ## [0.5.0] - 2026-08-19
 ### Geändert (Breaking)
 - **Entity-IDs der Sensoren umgestellt.** Bisher erzeugte Home Assistant sie aus den fest im Code stehenden deutschen Namen (`sensor.kraichtal_wetter_boen_max`, `sensor.kraichtal_wetter_gefuhlt`). Die Namen liegen jetzt in `translations/`, wodurch die IDs aus den sprachunabhängigen englischen Namen entstehen (`sensor.kraichtal_wetter_max_gust`, `sensor.kraichtal_wetter_feels_like`). Vollständige Zuordnung in der README.

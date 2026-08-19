@@ -22,7 +22,8 @@ Home-Assistant-Custom-Integration für die Kraichtal-Wetter-API. Kein Build-Syst
 - **Forecast-Caching**: `async_forecast_daily()` cached, `_handle_coordinator_update()` invalidiert. Nicht `async_update()` verwenden — `CoordinatorEntity` setzt `should_poll = False`, die Methode würde nie aufgerufen.
 - **ICON_MAP** in `weather.py` übersetzt API-Icon-Namen in HA-Wetterbedingungen. Nur Werte aus `ATTR_CONDITION_*` sind gültig; unbekannte Icons ergeben bewusst `None` statt einer falschen Bedingung.
 - **Auth-Fehler**: 401/403 → `ConfigEntryAuthFailed` (startet Reauth), alles andere → `UpdateFailed`. Setzt voraus, dass der Coordinator mit `config_entry=entry` erzeugt wird.
-- **API-Key nie loggen**: `aiohttp.ClientResponseError` enthält die vollständige URL inkl. `key`-Parameter in seiner String-Repräsentation. Deshalb in `coordinator.py` nur Status/`err.message` loggen und `from None` statt `from err` verwenden.
+- **API-Key gehört in den `X-API-Key`-Header, nie in die URL.** `aiohttp.ClientResponseError` bettet die Request-URL in seine String-Repräsentation ein — ein Key im Query-String erreicht darüber jedes Log. `_split_api_key()` in `coordinator.py` zieht einen in der URL konfigurierten Key heraus und bereinigt die URL; kein Codepfad darf ihn zurückschreiben. Zusätzlich als zweite Ebene: nur Status/`err.message` loggen, `from None` statt `from err`.
+- **Auth-Semantik der API**: 401 = Key fehlt, 403 = Key ungültig (beides verifiziert). Beide in `AUTH_ERROR_STATUSES`.
 - **Default `scan_interval`**: 300 s (konfigurierbar via Options-Flow)
 - **hass.data**: `hass.data[DOMAIN][entry.entry_id]` speichert `{"coordinator", "client", "entry"}`.
 - **UI-Sprache**: Deutsch. `strings.json` ist nur Quelle — zur Laufzeit lädt HA `translations/de.json` / `translations/en.json`; beide müssen mitgepflegt werden.
