@@ -1,0 +1,60 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kraichtal Wetter Konfiguration",
+        "data": {
+          "key": "API-Key (optional)",
+          "scan_interval": "Abfrageintervall in Sekunden"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Kraichtal Wetter – API-Key aktualisieren",
+        "data": {
+          "key": "Neuer API-Key"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Kraichtal Wetter ist bereits konfiguriert.",
+      "entry_not_found": "Konfigurationseintrag nicht gefunden.",
+      "reauth_successful": "API-Key erfolgreich aktualisiert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Kraichtal Wetter Einstellungen",
+        "data": {
+          "scan_interval": "Abfrageintervall in Sekunden"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "temp": { "name": "Außentemperatur" },
+      "feels_like": { "name": "Gefühlt" },
+      "dewpoint": { "name": "Taupunkt" },
+      "humidity": { "name": "Luftfeuchtigkeit" },
+      "pressure": { "name": "Luftdruck" },
+      "wind": { "name": "Windgeschwindigkeit" },
+      "wind_dir": { "name": "Windrichtung" },
+      "gust_max": { "name": "Böen max" },
+      "solar": { "name": "Solarstrahlung" },
+      "rain": { "name": "Niederschlag aktuell" },
+      "tmax_today": { "name": "Maximale Temperatur heute" },
+      "tmin_today": { "name": "Minimale Temperatur heute" },
+      "rain_today": { "name": "Niederschlag heute" },
+      "warnings": { "name": "Warnungen" },
+      "obs_date": { "name": "Beobachtungsdatum" },
+      "obs_time": { "name": "Beobachtungszeit" },
+      "realtime": { "name": "Echtzeitdaten" },
+      "station_today_tmax": { "name": "Station heute Tmax" },
+      "station_today_tmin": { "name": "Station heute Tmin" },
+      "station_today_gust": { "name": "Station heute Böe" },
+      "station_today_press_max": { "name": "Station heute Luftdruck max" },
+      "station_today_press_min": { "name": "Station heute Luftdruck min" }
+    }
+  }
+}

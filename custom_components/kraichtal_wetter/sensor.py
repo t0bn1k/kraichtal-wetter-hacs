@@ -1,151 +1,198 @@
 from __future__ import annotations
 
-from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
+)
+from homeassistant.const import (
+    DEGREE,
+    PERCENTAGE,
+    UnitOfIrradiance,
+    UnitOfPrecipitationDepth,
+    UnitOfPressure,
+    UnitOfSpeed,
+    UnitOfTemperature,
+)
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import CONF_API_URL, DOMAIN
 
 
+# `key` addresses the API payload (dot notation for nested fields) and forms the
+# unique_id; `translation_key` selects the display name from translations/.
+#
+# NOTE: Home Assistant derives the entity_id from the *English* name in
+# translations/en.json (deliberately language-independent), so changing an
+# English name moves the entity_id for new installs. Treat en.json as public
+# API and see _ENTITY_ID_MIGRATION in __init__.py.
 SENSOR_TYPES = [
     SensorEntityDescription(
         key="temp",
-        name="Außentemperatur",
-        native_unit_of_measurement="°C",
+        translation_key="temp",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:thermometer",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="feels_like",
-        name="Gefühlt",
-        native_unit_of_measurement="°C",
+        translation_key="feels_like",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:thermometer-lines",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="dewpoint",
-        name="Taupunkt",
-        native_unit_of_measurement="°C",
+        translation_key="dewpoint",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:water-percent",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="humidity",
-        name="Luftfeuchtigkeit",
-        native_unit_of_measurement="%",
+        translation_key="humidity",
+        native_unit_of_measurement=PERCENTAGE,
         icon="mdi:water-percent",
-        device_class="humidity",
+        device_class=SensorDeviceClass.HUMIDITY,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="pressure",
-        name="Luftdruck",
-        native_unit_of_measurement="hPa",
+        translation_key="pressure",
+        native_unit_of_measurement=UnitOfPressure.HPA,
         icon="mdi:gauge",
-        device_class="pressure",
+        device_class=SensorDeviceClass.PRESSURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="wind",
-        name="Windgeschwindigkeit",
-        native_unit_of_measurement="km/h",
+        translation_key="wind",
+        native_unit_of_measurement=UnitOfSpeed.KILOMETERS_PER_HOUR,
         icon="mdi:weather-windy",
+        device_class=SensorDeviceClass.WIND_SPEED,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
+        # No state_class: averaging a circular quantity across 0°/360° would
+        # produce meaningless long-term statistics.
         key="wind_dir",
-        name="Windrichtung",
-        native_unit_of_measurement="°",
+        translation_key="wind_dir",
+        native_unit_of_measurement=DEGREE,
         icon="mdi:compass",
     ),
     SensorEntityDescription(
         key="gust_max",
-        name="Böen max",
-        native_unit_of_measurement="km/h",
+        translation_key="gust_max",
+        native_unit_of_measurement=UnitOfSpeed.KILOMETERS_PER_HOUR,
         icon="mdi:weather-windy",
+        device_class=SensorDeviceClass.WIND_SPEED,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="solar",
-        name="Solarstrahlung",
-        native_unit_of_measurement="W/m²",
+        translation_key="solar",
+        native_unit_of_measurement=UnitOfIrradiance.WATTS_PER_SQUARE_METER,
         icon="mdi:weather-sunny",
+        device_class=SensorDeviceClass.IRRADIANCE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="rain",
-        name="Niederschlag aktuell",
-        native_unit_of_measurement="mm",
+        translation_key="rain",
+        native_unit_of_measurement=UnitOfPrecipitationDepth.MILLIMETERS,
         icon="mdi:weather-rainy",
+        device_class=SensorDeviceClass.PRECIPITATION,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="tmax_today",
-        name="Maximale Temperatur heute",
-        native_unit_of_measurement="°C",
+        translation_key="tmax_today",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:thermometer-high",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="tmin_today",
-        name="Minimale Temperatur heute",
-        native_unit_of_measurement="°C",
+        translation_key="tmin_today",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:thermometer-low",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
+        # Daily accumulating total that resets at midnight.
         key="rain_today",
-        name="Niederschlag heute",
-        native_unit_of_measurement="mm",
+        translation_key="rain_today",
+        native_unit_of_measurement=UnitOfPrecipitationDepth.MILLIMETERS,
         icon="mdi:weather-rainy",
+        device_class=SensorDeviceClass.PRECIPITATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     SensorEntityDescription(
         key="warnings",
-        name="Warnungen",
+        translation_key="warnings",
         icon="mdi:alarm",
     ),
     SensorEntityDescription(
         key="obs_date",
-        name="Beobachtungsdatum",
+        translation_key="obs_date",
         icon="mdi:calendar",
     ),
     SensorEntityDescription(
         key="obs_time",
-        name="Beobachtungszeit",
+        translation_key="obs_time",
         icon="mdi:clock",
     ),
     SensorEntityDescription(
         key="realtime",
-        name="Echtzeitdaten",
+        translation_key="realtime",
         icon="mdi:clock-fast",
     ),
     SensorEntityDescription(
         key="station_today.tmax",
-        name="Station heute Tmax",
-        native_unit_of_measurement="°C",
+        translation_key="station_today_tmax",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:thermometer-high",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="station_today.tmin",
-        name="Station heute Tmin",
-        native_unit_of_measurement="°C",
+        translation_key="station_today_tmin",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         icon="mdi:thermometer-low",
-        device_class="temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="station_today.gust",
-        name="Station heute Böe",
-        native_unit_of_measurement="km/h",
+        translation_key="station_today_gust",
+        native_unit_of_measurement=UnitOfSpeed.KILOMETERS_PER_HOUR,
         icon="mdi:weather-windy",
+        device_class=SensorDeviceClass.WIND_SPEED,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="station_today.press_max",
-        name="Station heute Luftdruck max",
-        native_unit_of_measurement="hPa",
+        translation_key="station_today_press_max",
+        native_unit_of_measurement=UnitOfPressure.HPA,
         icon="mdi:gauge",
-        device_class="pressure",
+        device_class=SensorDeviceClass.PRESSURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="station_today.press_min",
-        name="Station heute Luftdruck min",
-        native_unit_of_measurement="hPa",
+        translation_key="station_today_press_min",
+        native_unit_of_measurement=UnitOfPressure.HPA,
         icon="mdi:gauge",
-        device_class="pressure",
+        device_class=SensorDeviceClass.PRESSURE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
 ]
 
@@ -159,15 +206,18 @@ async def async_setup_entry(hass, entry, async_add_entities):
     )
 
 
-def _resolve_current_value(data: dict[str, object], key: str):
-    current = data.get("current") or {}
+def _resolve_current_value(data: object, key: str):
+    if not isinstance(data, dict):
+        return None
+
+    current = data.get("current")
     if not isinstance(current, dict):
         return None
 
     if "." not in key:
         return current.get(key)
 
-    value = current
+    value: object = current
     for part in key.split("."):
         if not isinstance(value, dict):
             return None
@@ -177,18 +227,18 @@ def _resolve_current_value(data: dict[str, object], key: str):
 
 class KraichtalWetterSensor(CoordinatorEntity, SensorEntity):
     entity_description: SensorEntityDescription
+    _attr_has_entity_name = True
 
     def __init__(self, coordinator, entry, description: SensorEntityDescription) -> None:
         super().__init__(coordinator)
         self.entity_description = description
-        self._attr_name = f"Kraichtal Wetter {description.name}"
         self._attr_unique_id = f"kraichtal_wetter_{description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, entry.entry_id)},
             name="Kraichtal Wetter",
             manufacturer="Kraichtal Wetter",
             model="Kraichtal Wetter Station",
-            configuration_url=entry.data.get("api_url", ""),
+            configuration_url=entry.data.get(CONF_API_URL, ""),
         )
 
     @property
