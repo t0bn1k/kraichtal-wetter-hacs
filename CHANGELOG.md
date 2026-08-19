@@ -28,6 +28,11 @@ Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 - `country: "DE"` in `hacs.json` — laut HACS-Aufnahmekriterien anzugeben, wenn ein Repository nur ein einzelnes Land bedient.
 - `.github/workflows/validate.yml`: HACS-Action und Hassfest, beides Voraussetzung für die Aufnahme in den HACS-Standardkatalog.
 - `LICENSE` (MIT) — bis dahin galt trotz öffentlichem Repository das Standard-Urheberrecht, eine Nachnutzung war damit formal nicht gestattet. Die HACS-Action prüft inzwischen auf eine Lizenz.
+- `issue_tracker` im Manifest — Pflichtfeld der HACS-Manifestprüfung, fehlte bisher.
+
+### Behoben (Build)
+- Manifest-Keys nach Hassfest-Vorgabe sortiert (`domain`, `name`, danach alphabetisch).
+- `actions/checkout` von v4 auf v5 gehoben; v4 löste die Node-20-Deprecation-Warnung der GitHub-Runner aus.
 
 ### Entfernt
 - `custom_components/kraichtal_wetter/README.md`: wurde von nichts ausgeliefert (HACS rendert das Root-README), enthielt die veralteten Entity-IDs und beschrieb eine YAML-Konfiguration über `configuration.yaml`, die die Integration nie unterstützt hat — ein dort hinterlegter API-Key wurde wirkungslos ignoriert.
