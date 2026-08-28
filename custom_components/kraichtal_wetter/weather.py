@@ -23,12 +23,19 @@ _LOGGER = logging.getLogger(__name__)
 # unknown icon deliberately yields None ("unknown") rather than a wrong guess.
 ICON_MAP = {
     "suncloud": "partlycloudy",
+    "mooncloud": "partlycloudy",
     "storm": "lightning",
     "sunstorm": "lightning-rainy",
     "storm-rain": "pouring",
     "cloud": "cloudy",
     "ovc": "cloudy",
+    "rain": "rainy",
+    "rain-hvy": "pouring",
 }
+
+# Icons we've already warned about, so a persistently unmapped icon (e.g. one
+# sent every poll overnight) logs once instead of spamming at scan_interval.
+_warned_icons: set[object] = set()
 
 
 def _condition(icon: object) -> str | None:
@@ -37,7 +44,15 @@ def _condition(icon: object) -> str | None:
         return None
     condition = ICON_MAP.get(icon)
     if condition is None:
-        _LOGGER.debug("Unmapped Kraichtal Wetter icon: %r", icon)
+        if icon in _warned_icons:
+            _LOGGER.debug("Unmapped Kraichtal Wetter icon: %r", icon)
+        else:
+            _warned_icons.add(icon)
+            _LOGGER.warning(
+                "Unmapped Kraichtal Wetter icon: %r - condition will show as "
+                "unknown until ICON_MAP is extended for it",
+                icon,
+            )
     return condition
 
 

@@ -2,6 +2,31 @@
 
 Alle signifikanten Änderungen an dieser Integration werden hier festgehalten.
 
+## [0.5.2] - 2026-08-28
+### Behoben
+- Wetterlage stand nachts sowie an einzelnen Vorhersagetagen auf `unknown`
+  bzw. `condition: null`. Ursache: `ICON_MAP` in `weather.py` deckte nicht
+  alle von der API gelieferten Icon-Codes ab — `_condition()` gab für einen
+  unbekannten Code bewusst `None` zurück (kein Bug, sondern die 0.5.0-Absicht,
+  keine falsche Bedingung zu raten), aber die fehlenden Codes wurden nie
+  ergänzt. Live gegen die Produktions-API verifiziert: `mooncloud` (Nacht-
+  Pendant zu `suncloud`) für die aktuelle Bedingung sowie `rain` und
+  `rain-hvy` für die Tagesvorhersage. Alle drei sind jetzt auf
+  `partlycloudy`, `rainy` bzw. `pouring` gemappt.
+- Ein unbekannter Icon-Code wird jetzt einmalig als `WARNING` geloggt statt
+  ausschließlich als `DEBUG` (das nur sichtbar ist, wenn Debug-Logging für
+  die Integration bereits vorher aktiviert wurde). Wiederholungen desselben
+  Codes bleiben `DEBUG`, um das Log bei einem dauerhaft unbekannten Code
+  nicht mit einem Eintrag pro Abrufintervall zu fluten.
+
+### Bekannt
+- `ICON_MAP` deckt weiterhin nur die bisher tatsächlich beobachteten
+  API-Icons ab (6 von 15 möglichen HA-Wetterbedingungen). Insbesondere für
+  klaren Himmel (`sunny`/`clear-night`) gibt es noch keinen Icon-Code im
+  Mapping — ein wolkenloser Tag oder eine klare Nacht zeigt bis dahin
+  weiterhin `unknown`, jetzt aber sichtbar per `WARNING` statt lautlos.
+  Schnee, Nebel, Hagel und Wind sind ebenfalls noch nicht abgedeckt.
+
 ## [0.5.1] - 2026-08-19
 ### Geändert
 - **Der API-Key wird jetzt als `X-API-Key`-Header übertragen statt als `key`-Query-Parameter.** Damit ist die Ursache des Log-Lecks beseitigt statt nur abgefangen: `aiohttp.ClientResponseError` bettet die Request-URL in seine String-Repräsentation ein, Header dagegen nicht. Der Key kann so über keinen Traceback, keine Exception-Chain und kein Debug-Logging der HTTP-Ebene mehr austreten — auch nicht über Code, der erst künftig hinzukommt.
